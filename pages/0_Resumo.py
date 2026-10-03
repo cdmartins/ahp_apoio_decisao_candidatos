@@ -2,7 +2,7 @@ import textwrap
 
 import streamlit as st
 
-from ahp.calculo import calcular_pesos, calcular_razao_consistencia, calcular_ranking, contar_pares_julgados
+from ahp.calculo import calcular_pesos_e_consistencia, calcular_resultados, contar_pares_julgados
 from ahp.estado import inicializar_estado, cabecalho_processo
 from ahp.navegacao import renderizar_navegacao
 
@@ -19,13 +19,13 @@ n_candidatos = len(candidatos)
 
 pesos_criterios = None
 cr_criterios = None
-if n_criterios >= 2:
-    pesos_criterios = calcular_pesos(matriz_criterios)
-    _, _, cr_criterios = calcular_razao_consistencia(matriz_criterios, pesos_criterios)
-
 ranking = []
 if n_criterios >= 2 and n_candidatos >= 2:
-    ranking = calcular_ranking(criterios, candidatos, avaliacoes, pesos_criterios)
+    pesos_criterios, cr_criterios, _, ranking = calcular_resultados(
+        criterios, candidatos, avaliacoes, matriz_criterios
+    )
+elif n_criterios >= 2:
+    pesos_criterios, cr_criterios = calcular_pesos_e_consistencia(matriz_criterios)
 
 pesos_salvos = st.session_state.get("pesos_salvos", False)
 

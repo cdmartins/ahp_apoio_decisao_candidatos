@@ -3,7 +3,7 @@ import textwrap
 import pandas as pd
 import streamlit as st
 
-from ahp.calculo import calcular_pesos, calcular_razao_consistencia, matriz_identidade
+from ahp.calculo import calcular_pesos_e_consistencia, matriz_identidade
 from ahp.estado import inicializar_estado, nomes_criterios, cabecalho_processo
 from ahp.navegacao import renderizar_navegacao
 
@@ -202,14 +202,13 @@ with col_principal:
     st.session_state.matriz_criterios = matriz
 
 with col_lateral:
-    pesos = calcular_pesos(matriz)
-    lambda_max, _, cr = calcular_razao_consistencia(matriz, pesos)
+    pesos, cr = calcular_pesos_e_consistencia(matriz)
     st.session_state.pesos_criterios = pesos
     st.session_state.cr_criterios = cr
 
     with st.container(border=True):
         st.markdown("**Pesos calculados**")
-        st.caption("Cada coluna da matriz é normalizada pela sua soma; o peso de cada critério é a média da sua linha")
+        st.caption("Pesos calculados pelo AHPy a partir do autovetor principal da matriz de comparação")
         for nome, peso in zip(nomes, pesos):
             col_nome, col_pct = st.columns([3, 1])
             col_nome.write(nome)
@@ -218,9 +217,7 @@ with col_lateral:
 
     with st.container(border=True):
         st.markdown("**Consistência**")
-        col_lambda, col_cr = st.columns(2)
-        col_lambda.metric("λ máx", f"{lambda_max:.3f}")
-        col_cr.metric("CR", f"{cr:.3f}")
+        st.metric("CR", f"{cr:.3f}")
         if cr > 0.1:
             st.error("Julgamentos inconsistentes (CR > 0,10). Revise as comparações.")
         else:

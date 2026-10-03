@@ -5,7 +5,7 @@ from ahp.navegacao import renderizar_navegacao
 
 inicializar_estado()
 
-st.title("AHP-Qualifica")
+st.title("AHP: Apoio a decisão para seleção de candidatos")
 st.write(
     "Sistema de apoio à decisão para seleção de candidatos usando o método AHP "
     "(Analytic Hierarchy Process)."
@@ -24,10 +24,6 @@ st.markdown(
     """
 )
 
-st.info(
-    "Não há dados de exemplo — comece iniciando um processo seletivo abaixo e depois vá "
-    "preenchendo cada página na ordem: Critérios, Definir Importância, Candidatos e Avaliações."
-)
 
 st.divider()
 st.markdown("### Processo seletivo")

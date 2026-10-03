@@ -5,10 +5,7 @@ import pandas as pd
 import streamlit as st
 
 from ahp.calculo import (
-    calcular_pesos,
-    calcular_razao_consistencia,
-    calcular_prioridades_locais,
-    calcular_ranking,
+    calcular_resultados,
     contar_pares_julgados,
 )
 from ahp.estado import inicializar_estado, cabecalho_processo
@@ -40,14 +37,13 @@ if len(criterios) < 2 or len(candidatos) < 2:
     st.stop()
 
 matriz_criterios = st.session_state.matriz_criterios
-pesos_criterios = calcular_pesos(matriz_criterios)
-_, _, cr_criterios = calcular_razao_consistencia(matriz_criterios, pesos_criterios)
+pesos_criterios, cr_criterios, prioridades_locais, ranking = calcular_resultados(
+    criterios, candidatos, st.session_state.avaliacoes, matriz_criterios
+)
 pares_julgados = contar_pares_julgados(matriz_criterios)
 
 nomes_candidatos = [c["nome"] for c in candidatos]
 
-prioridades_locais = calcular_prioridades_locais(criterios, candidatos, st.session_state.avaliacoes)
-ranking = calcular_ranking(criterios, candidatos, st.session_state.avaliacoes, pesos_criterios)
 cores_criterio = {c["id"]: PALETA_CRITERIOS[i % len(PALETA_CRITERIOS)] for i, c in enumerate(criterios)}
 
 if "resultado_calculado_em" not in st.session_state:
